@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ name }}님 환영합니다</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, "Malgun Gothic", sans-serif;
+            margin: 40px;
+            background: #f8f9fb;
+        }
+        .card {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+        a {
+            display: inline-block;
+            margin-top: 12px;
+            text-decoration: none;
+            background: #111;
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>안녕하세요, {{ name }}님</h1>
+        <p>이름 길이: {{ length }}자</p>
+        <a href="/subscribe">구독 페이지로 이동</a>
+    </div>
+</body>
+</html>

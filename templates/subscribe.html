@@ -1,0 +1,1039 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI 구독료 계산기 Pro 5</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --bg-grad-top: #eef4ff;
+      --card: #ffffff;
+      --card-soft: #f8fbff;
+      --text: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --primary: #2563eb;
+      --danger: #dc2626;
+      --warn: #d97706;
+      --success: #16a34a;
+      --purple: #7c3aed;
+      --teal: #0f766e;
+      --yellow: #ca8a04;
+      --soft-blue: #eff6ff;
+      --soft-red: #fef2f2;
+      --soft-yellow: #fffbeb;
+      --soft-green: #f0fdf4;
+      --shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      --thead: #f8fafc;
+      --table-border: #edf2f7;
+      --input-bg: #ffffff;
+      --seg-bg: #eef2ff;
+    }
+
+    body.dark {
+      --bg: #0b1220;
+      --bg-grad-top: #0f172a;
+      --card: #111827;
+      --card-soft: #172133;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --line: #243041;
+      --primary: #60a5fa;
+      --danger: #f87171;
+      --warn: #fbbf24;
+      --success: #4ade80;
+      --purple: #a78bfa;
+      --teal: #2dd4bf;
+      --yellow: #facc15;
+      --soft-blue: #132038;
+      --soft-red: #2a1518;
+      --soft-yellow: #2e2412;
+      --soft-green: #12281a;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      --thead: #162033;
+      --table-border: #223047;
+      --input-bg: #0f172a;
+      --seg-bg: #182338;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, "Malgun Gothic", sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: linear-gradient(180deg, var(--bg-grad-top) 0%, var(--bg) 240px);
+      color: var(--text);
+    }
+
+    .wrap {
+      max-width: 1260px;
+      margin: 0 auto;
+    }
+
+    h1, h2, h3 { margin-top: 0; }
+    h1 { font-size: 32px; margin-bottom: 10px; }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px;
+      margin: 14px 0;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .card-gradient {
+      background: linear-gradient(135deg, var(--card) 0%, var(--card-soft) 100%);
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: end;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 14px;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      background: var(--card);
+    }
+
+    .stat.primary { background: linear-gradient(135deg, var(--soft-blue), var(--card)); }
+    .stat.purple { background: linear-gradient(135deg, #f5f3ff, var(--card)); }
+    .stat.green { background: linear-gradient(135deg, var(--soft-green), var(--card)); }
+    .stat.yellow { background: linear-gradient(135deg, var(--soft-yellow), var(--card)); }
+    .stat.red { background: linear-gradient(135deg, var(--soft-red), var(--card)); }
+
+    body.dark .stat.purple { background: linear-gradient(135deg, #21153d, var(--card)); }
+
+    .stat .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .stat .value {
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    input, select {
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      min-width: 180px;
+      font-size: 14px;
+      background: var(--input-bg);
+      color: var(--text);
+    }
+
+    button, a.btn {
+      padding: 11px 14px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--primary);
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 14px;
+      display: inline-block;
+      font-weight: 700;
+    }
+
+    .btn-secondary { background: #64748b; }
+    .btn-danger { background: var(--danger); }
+    .btn-edit { background: var(--purple); }
+    .btn-green { background: var(--success); }
+    .btn-archive { background: var(--teal); }
+    .btn-restore { background: var(--yellow); color: #111; }
+    .btn-theme { background: #111827; }
+
+    body.dark .btn-theme {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .segmented {
+      display: inline-flex;
+      background: var(--seg-bg);
+      padding: 4px;
+      border-radius: 999px;
+      gap: 4px;
+    }
+
+    .segmented a {
+      padding: 8px 14px;
+      border-radius: 999px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .segmented a.active {
+      background: var(--card);
+      color: var(--primary);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--table-border);
+      padding: 12px 10px;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      font-size: 13px;
+      color: var(--muted);
+      background: var(--thead);
+    }
+
+    .muted { color: var(--muted); font-size: 13px; }
+    .danger { color: var(--danger); font-weight: 800; }
+    .warn { color: var(--warn); font-weight: 800; }
+    .success { color: var(--success); font-weight: 800; }
+    .expired { background: rgba(220, 38, 38, 0.06); }
+    .right { text-align: right; }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid var(--line);
+      margin-left: 6px;
+      background: var(--card);
+      font-weight: 700;
+    }
+
+    .badge-expired { color: var(--danger); }
+    .badge-d7 { color: var(--warn); }
+    .badge-category { color: #fff; border: none; margin-left: 0; }
+
+    .inline-form { display: inline; margin: 0; }
+
+    .flash {
+      padding: 13px 15px;
+      border-radius: 14px;
+      margin: 10px 0;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .flash-success { background: var(--soft-green); color: var(--success); }
+    .flash-error { background: var(--soft-red); color: var(--danger); }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .table-wrap { overflow-x: auto; }
+    .top-list li { margin: 8px 0; }
+
+    .chart-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chart-row {
+      display: grid;
+      grid-template-columns: 110px 1fr 100px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .chart-label {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .chart-bar-wrap {
+      width: 100%;
+      height: 18px;
+      background: var(--thead);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .chart-bar {
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    .import-box {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: end;
+    }
+
+    .budget-card {
+      background: linear-gradient(135deg, var(--soft-blue), var(--card-soft));
+      border: 1px solid rgba(59, 130, 246, 0.28);
+    }
+
+    .budget-bar-wrap {
+      width: 100%;
+      height: 20px;
+      background: rgba(59, 130, 246, 0.14);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 10px 0 8px;
+    }
+
+    .budget-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--purple));
+      border-radius: 999px;
+    }
+
+    .budget-over .budget-bar {
+      background: linear-gradient(90deg, #f59e0b, var(--danger));
+    }
+
+    .pill-note {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--seg-bg);
+      color: var(--primary);
+    }
+
+    .service-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .service-icon {
+      font-size: 18px;
+    }
+
+    .backup-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .backup-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card-soft);
+      flex-wrap: wrap;
+    }
+
+    .theme-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 1080px) {
+      .three-col, .two-col { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 700px) {
+      body { padding: 12px; }
+      .actions { justify-content: start; }
+      .chart-row { grid-template-columns: 1fr; }
+      h1 { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header-row">
+      <div>
+        <h1>AI 구독료 계산기 Pro 5</h1>
+        <p class="subtitle">PIN 잠금, 인쇄용 리포트, 배포 마무리가 추가된 버전</p>
+      </div>
+      <div class="theme-row">
+        <span class="pill-note">USD 환산 기준: 1달러 = {{ "{:,}".format(exchange_rate) }}원</span>
+        <a class="btn btn-secondary" href="/report" target="_blank">리포트</a>
+        <a class="btn btn-secondary" href="/logout">잠금</a>
+        <button type="button" class="btn-theme" id="themeToggle">🌙 다크모드</button>
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {% if category == 'success' %}flash-success{% else %}flash-error{% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="card card-gradient">
+      <div class="row" style="justify-content: space-between; align-items: center;">
+        <div>
+          <div class="segmented">
+            <a href="/subscribe?view=active" class="{% if archived_mode == 'active' %}active{% endif %}">활성 구독</a>
+            <a href="/subscribe?view=archived" class="{% if archived_mode == 'archived' %}active{% endif %}">보관함</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if archived_mode == 'active' %}
+    <div class="card">
+      <form method="post" action="/subscribe">
+        <div class="row">
+          <div>
+            <label>구독 종류</label>
+            <select name="type">
+              <option value="monthly">월간</option>
+              <option value="yearly">연간</option>
+            </select>
+          </div>
+
+          <div>
+            <label>카테고리</label>
+            <select name="category">
+              {% for c in category_options %}
+                <option value="{{ c }}">{{ c }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div>
+            <label>서비스명</label>
+            <input name="name" placeholder="예: ChatGPT" maxlength="100" />
+          </div>
+
+          <div>
+            <label>가격</label>
+            <input name="price" placeholder="예: 25000" />
+          </div>
+
+          <div>
+            <label>통화</label>
+            <select name="currency">
+              <option value="KRW">KRW(원)</option>
+              <option value="USD">USD(달러)</option>
+            </select>
+          </div>
+
+          <div>
+            <label>만기 날짜</label>
+            <input type="date" name="expiry" />
+            <div class="muted">선택 사항</div>
+          </div>
+
+          <div>
+            <button type="submit">추가</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+
+    <div class="card">
+      <form method="get" action="/subscribe">
+        <input type="hidden" name="view" value="{{ archived_mode }}" />
+        <div class="row">
+          <div>
+            <label>서비스 검색</label>
+            <input name="q" value="{{ q }}" placeholder="서비스명 검색" />
+          </div>
+
+          <div>
+            <label>카테고리 필터</label>
+            <select name="category">
+              <option value="">전체</option>
+              {% for c in category_options %}
+                <option value="{{ c }}" {% if selected_category == c %}selected{% endif %}>{{ c }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div>
+            <label>구독 종류 필터</label>
+            <select name="sub_type">
+              <option value="">전체</option>
+              <option value="monthly" {% if selected_sub_type == 'monthly' %}selected{% endif %}>월간</option>
+              <option value="yearly" {% if selected_sub_type == 'yearly' %}selected{% endif %}>연간</option>
+            </select>
+          </div>
+
+          <div>
+            <label>정렬</label>
+            <select name="sort">
+              {% for key, label in sort_options.items() %}
+                <option value="{{ key }}" {% if sort_mode == key %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div>
+            <button type="submit">적용</button>
+          </div>
+
+          <div>
+            <a class="btn btn-secondary" href="/subscribe?view={{ archived_mode }}">초기화</a>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    {% if archived_mode == 'active' %}
+    <div class="card budget-card {% if stats.is_budget_over %}budget-over{% endif %}">
+      <div class="row" style="justify-content: space-between; align-items: end;">
+        <div style="flex: 1; min-width: 280px;">
+          <h2>월 예산 관리</h2>
+          <p>
+            월간 사용액:
+            <b>{{ "{:,}".format(stats.monthly_total) }}원</b>
+            /
+            예산:
+            <b>{{ "{:,}".format(stats.monthly_budget) }}원</b>
+          </p>
+          <div class="budget-bar-wrap">
+            <div class="budget-bar" style="width: {{ stats.budget_percent if stats.budget_percent < 100 else 100 }}%;"></div>
+          </div>
+          {% if stats.is_budget_over %}
+            <p class="danger">예산을 {{ "{:,}".format(-stats.budget_left) }}원 초과했습니다.</p>
+          {% else %}
+            <p class="success">예산이 {{ "{:,}".format(stats.budget_left) }}원 남았습니다.</p>
+          {% endif %}
+        </div>
+
+        <div>
+          <form action="/budget" method="post" class="row">
+            <div>
+              <label>월 예산 수정</label>
+              <input name="monthly_budget" value="{{ stats.monthly_budget }}" />
+            </div>
+            <div>
+              <button type="submit">예산 저장</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="grid">
+      <div class="stat primary">
+        <div class="label">월간 합계</div>
+        <div class="value">{{ "{:,}".format(total_monthly) }}원</div>
+      </div>
+      <div class="stat purple">
+        <div class="label">연간 합계</div>
+        <div class="value">{{ "{:,}".format(total_yearly) }}원</div>
+      </div>
+      <div class="stat green">
+        <div class="label">연 환산 합계</div>
+        <div class="value">{{ "{:,}".format(total_annual) }}원</div>
+      </div>
+      <div class="stat primary">
+        <div class="label">전체 구독 수</div>
+        <div class="value">{{ stats.total_count }}</div>
+      </div>
+      <div class="stat yellow">
+        <div class="label">만기 임박(D-{{ d7_warning_days }})</div>
+        <div class="value">{{ stats.d7_count }}</div>
+      </div>
+      <div class="stat red">
+        <div class="label">만료된 항목</div>
+        <div class="value">{{ stats.expired_count }}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <div>
+          <a class="btn btn-green" href="/export">CSV 내보내기</a>
+        </div>
+
+        <form action="/import" method="post" enctype="multipart/form-data" class="inline-form">
+          <div class="import-box">
+            <div>
+              <label>CSV 가져오기</label>
+              <input type="file" name="csv_file" accept=".csv" />
+            </div>
+            <div>
+              <button type="submit">가져오기</button>
+            </div>
+          </div>
+        </form>
+
+        <form action="/clear" method="post" class="inline-form">
+          <input type="hidden" name="mode" value="{{ archived_mode }}" />
+          <button class="btn btn-danger" type="submit" onclick="return confirm('현재 보고 있는 목록을 모두 삭제할까요?')">
+            {% if archived_mode == 'archived' %}보관함 전체 삭제{% else %}활성 목록 전체 삭제{% endif %}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="three-col">
+      <div class="card">
+        <h2>관리 요약</h2>
+        <p>월간 {{ "{:,}".format(recommend_threshold) }}원 이상 항목 수: <b>{{ stats.recommend_count }}</b></p>
+        {% if stats.top_monthly %}
+          <h3>월간 비용 상위 항목</h3>
+          <ol class="top-list">
+            {% for s in stats.top_monthly %}
+              <li>
+                <span class="badge badge-category" style="background: {{ s.category_color }};">{{ s.category_icon }} {{ s.category }}</span>
+                {{ s.name }} - {{ "{:,}".format(s.price) }}원
+              </li>
+            {% endfor %}
+          </ol>
+        {% else %}
+          <p class="muted">표시할 데이터가 없습니다.</p>
+        {% endif %}
+      </div>
+
+      <div class="card">
+        <h2>카테고리별 월간 비용</h2>
+        {% if stats.monthly_category_chart %}
+          <div class="chart-list">
+            {% for item in stats.monthly_category_chart %}
+              <div class="chart-row">
+                <div class="chart-label">{{ item.icon }} {{ item.category }}</div>
+                <div class="chart-bar-wrap">
+                  <div class="chart-bar" style="width: {{ (item.value / stats.max_monthly_category_value * 100) if stats.max_monthly_category_value else 0 }}%; background: {{ item.color }};"></div>
+                </div>
+                <div class="right">{{ "{:,}".format(item.value) }}원</div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="muted">월간 차트 데이터가 없습니다.</p>
+        {% endif %}
+      </div>
+
+      <div class="card">
+        <h2>자동 백업</h2>
+        {% if recent_backups %}
+          <div class="backup-list">
+            {% for backup in recent_backups %}
+              <div class="backup-item">
+                <div><b>{{ backup.name }}</b></div>
+                <div class="muted">{{ backup.modified_at }} / {{ backup.size_kb }}KB</div>
+              </div>
+            {% endfor %}
+          </div>
+          <p class="muted" style="margin-top: 10px;">앱 실행 시 DB가 자동 백업되며 최근 10개만 유지됩니다.</p>
+        {% else %}
+          <p class="muted">아직 백업 파일이 없습니다.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if archived_mode == 'active' and stats.month_report %}
+    <div class="card">
+      <h2>월별 리포트</h2>
+      <div class="chart-list">
+        {% for item in stats.month_report %}
+          <div class="chart-row">
+            <div class="chart-label">📅 {{ item.month }}</div>
+            <div class="chart-bar-wrap">
+              <div class="chart-bar" style="width: {{ (item.total / stats.max_month_report_value * 100) if stats.max_month_report_value else 0 }}%; background: linear-gradient(90deg, var(--primary), var(--purple));"></div>
+            </div>
+            <div class="right">{{ "{:,}".format(item.total) }}원</div>
+          </div>
+          <div class="muted" style="margin-top: -6px; margin-bottom: 8px;">
+            월간 {{ "{:,}".format(item.monthly) }}원 / 연간 {{ "{:,}".format(item.yearly) }}원
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if archived_mode == 'archived' %}
+    <div class="card">
+      <h2>보관된 구독</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>서비스명</th>
+              <th>유형</th>
+              <th>카테고리</th>
+              <th class="right">가격(원)</th>
+              <th>입력 통화</th>
+              <th>만기일</th>
+              <th>D-day</th>
+              <th class="right">관리</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in monthly_list + yearly_list %}
+            <tr class="{% if s.is_expired %}expired{% endif %}">
+              <td>
+                <div class="service-name">
+                  <span class="service-icon">{{ s.category_icon }}</span>
+                  <span>{{ s.name }}</span>
+                  {% if s.is_expired %}
+                    <span class="badge badge-expired">만료됨</span>
+                  {% elif s.is_d7 %}
+                    <span class="badge badge-d7">D-{{ s.due_days }}</span>
+                  {% endif %}
+                </div>
+              </td>
+
+              <td>
+                {% if s.type == 'monthly' %}
+                  <span class="badge" style="background:#2563eb;">월간</span>
+                {% else %}
+                  <span class="badge" style="background:#7c3aed;">연간</span>
+                {% endif %}
+              </td>
+
+              <td>
+                <span class="badge badge-category" style="background: {{ s.category_color }};">{{ s.category_icon }} {{ s.category }}</span>
+              </td>
+
+              <td class="right">{{ "{:,}".format(s.price) }}</td>
+              <td>{{ s.currency }} / {{ "{:,}".format(s.original_price) }}</td>
+              <td class="{% if s.is_expired or s.is_d7 %}warn{% endif %}">{{ s.expiry if s.expiry else "-" }}</td>
+              <td>
+                {% if s.due_days is not none %}
+                  {% if s.due_days < 0 %}
+                    <span class="warn">D+{{ -s.due_days }}</span>
+                  {% elif s.due_days == 0 %}
+                    <span class="warn">D-0(오늘)</span>
+                  {% else %}
+                    D-{{ s.due_days }}
+                  {% endif %}
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+
+              <td class="right">
+                <div class="actions">
+                  <form action="/restore/{{ s.id }}" method="post" class="inline-form">
+                    <button class="btn-restore" type="submit">복원</button>
+                  </form>
+                  <form action="/delete/{{ s.id }}" method="post" class="inline-form">
+                    <button class="btn-danger" type="submit" onclick="return confirm('완전히 삭제할까요?')">영구 삭제</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="8" class="muted">보관된 구독이 없습니다.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% else %}
+
+    <div class="card">
+      <h2>월간 구독</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>서비스명</th>
+              <th>카테고리</th>
+              <th class="right">가격(원)</th>
+              <th>입력 통화</th>
+              <th>만기일</th>
+              <th>D-day</th>
+              <th>자동결제</th>
+              <th class="right">관리</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in monthly_list %}
+            <tr class="{% if s.is_expired %}expired{% endif %}">
+              <td>
+                <div class="service-name">
+                  <span class="service-icon">{{ s.category_icon }}</span>
+                  <span>{{ s.name }}</span>
+                  {% if s.is_expired %}
+                    <span class="badge badge-expired">만료됨</span>
+                  {% elif s.is_d7 %}
+                    <span class="badge badge-d7">D-{{ s.due_days }}</span>
+                  {% endif %}
+                  {% if s.price >= recommend_threshold %}
+                    <span class="danger">(정리 추천)</span>
+                  {% endif %}
+                </div>
+              </td>
+
+              <td>
+                <span class="badge badge-category" style="background: {{ s.category_color }};">{{ s.category_icon }} {{ s.category }}</span>
+              </td>
+
+              <td class="right">{{ "{:,}".format(s.price) }}</td>
+              <td>{{ s.currency }} / {{ "{:,}".format(s.original_price) }}</td>
+              <td class="{% if s.is_expired or s.is_d7 %}warn{% endif %}">{{ s.expiry if s.expiry else "-" }}</td>
+              <td>
+                {% if s.due_days is not none %}
+                  {% if s.due_days < 0 %}
+                    <span class="warn">D+{{ -s.due_days }}</span>
+                  {% elif s.due_days == 0 %}
+                    <span class="warn">D-0(오늘)</span>
+                  {% else %}
+                    D-{{ s.due_days }}
+                  {% endif %}
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+
+              <td>
+                <form action="/auto-renew/{{ s.id }}" method="post" class="inline-form">
+                  <button type="submit"
+                    style="background: {% if s.auto_renew %}var(--success){% else %}#94a3b8{% endif %}; padding: 7px 12px; font-size: 13px;"
+                    title="{% if s.auto_renew %}자동결제 켜짐 — 클릭하면 끄기{% else %}자동결제 꺼짐 — 클릭하면 켜기{% endif %}">
+                    {% if s.auto_renew %}ON{% else %}OFF{% endif %}
+                  </button>
+                </form>
+              </td>
+
+              <td class="right">
+                <div class="actions">
+                  <a class="btn btn-edit" href="/edit/{{ s.id }}">수정</a>
+                  <form action="/archive/{{ s.id }}" method="post" class="inline-form">
+                    <button class="btn-archive" type="submit">보관</button>
+                  </form>
+                  <form action="/delete/{{ s.id }}" method="post" class="inline-form">
+                    <button type="submit" onclick="return confirm('완전히 삭제할까요?')">삭제</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="8" class="muted">표시할 월간 구독이 없습니다.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>연간 구독</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>서비스명</th>
+              <th>카테고리</th>
+              <th class="right">가격(원)</th>
+              <th>입력 통화</th>
+              <th>만기일</th>
+              <th>D-day</th>
+              <th class="right">관리</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in yearly_list %}
+            <tr class="{% if s.is_expired %}expired{% endif %}">
+              <td>
+                <div class="service-name">
+                  <span class="service-icon">{{ s.category_icon }}</span>
+                  <span>{{ s.name }}</span>
+                  {% if s.is_expired %}
+                    <span class="badge badge-expired">만료됨</span>
+                  {% elif s.is_d7 %}
+                    <span class="badge badge-d7">D-{{ s.due_days }}</span>
+                  {% endif %}
+                </div>
+              </td>
+
+              <td>
+                <span class="badge badge-category" style="background: {{ s.category_color }};">{{ s.category_icon }} {{ s.category }}</span>
+              </td>
+
+              <td class="right">{{ "{:,}".format(s.price) }}</td>
+              <td>{{ s.currency }} / {{ "{:,}".format(s.original_price) }}</td>
+              <td class="{% if s.is_expired or s.is_d7 %}warn{% endif %}">
+                {{ s.expiry if s.expiry else "-" }}
+              </td>
+
+              <td>
+                {% if s.due_days is not none %}
+                  {% if s.due_days < 0 %}
+                    <span class="warn">D+{{ -s.due_days }}</span>
+                  {% elif s.due_days == 0 %}
+                    <span class="warn">D-0(오늘)</span>
+                  {% else %}
+                    D-{{ s.due_days }}
+                  {% endif %}
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+
+              <td class="right">
+                <div class="actions">
+                  <a class="btn btn-edit" href="/edit/{{ s.id }}">수정</a>
+                  <form action="/archive/{{ s.id }}" method="post" class="inline-form">
+                    <button class="btn-archive" type="submit">보관</button>
+                  </form>
+                  <form action="/delete/{{ s.id }}" method="post" class="inline-form">
+                    <button type="submit" onclick="return confirm('완전히 삭제할까요?')">삭제</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="7" class="muted">연간 구독이 없습니다.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {% endif %}
+
+    {% if archived_mode == 'active' and payment_history %}
+    <div class="card">
+      <h2>자동결제 이력</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>서비스명</th>
+              <th class="right">결제 금액(원)</th>
+              <th>결제일</th>
+              <th>갱신된 만기일</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in payment_history %}
+            <tr>
+              <td>
+                <span class="service-icon">{{ p.category_icon }}</span>
+                {{ p.subscription_name }}
+              </td>
+              <td class="right">{{ "{:,}".format(p.amount) }}</td>
+              <td>{{ p.paid_at }}</td>
+              <td>{{ p.new_expiry }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if archived_mode == 'active' %}
+    <div class="card">
+      <h2>보안 설정</h2>
+      <form action="/security" method="post">
+        <div class="row">
+          <div>
+            <label>PIN 잠금 사용</label>
+            <input type="checkbox" name="pin_enabled" {% if pin_enabled %}checked{% endif %} />
+          </div>
+          {% if pin_enabled %}
+          <div>
+            <label>현재 PIN</label>
+            <input type="password" name="current_pin" placeholder="현재 PIN 입력" />
+          </div>
+          {% endif %}
+          <div>
+            <label>새 PIN</label>
+            <input type="password" name="new_pin" placeholder="변경할 때만 입력" />
+            <div class="muted">최소 4자리 이상</div>
+          </div>
+          <div>
+            <button type="submit">보안 저장</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    (function () {
+      const body = document.body;
+      const btn = document.getElementById("themeToggle");
+      const saved = localStorage.getItem("subscription-theme") || "light";
+
+      function applyTheme(theme) {
+        if (theme === "dark") {
+          body.classList.add("dark");
+          btn.textContent = "☀️ 라이트모드";
+        } else {
+          body.classList.remove("dark");
+          btn.textContent = "🌙 다크모드";
+        }
+      }
+
+      applyTheme(saved);
+
+      btn.addEventListener("click", function () {
+        const next = body.classList.contains("dark") ? "light" : "dark";
+        localStorage.setItem("subscription-theme", next);
+        applyTheme(next);
+      });
+    })();
+  </script>
+</body>
+</html>

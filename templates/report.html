@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>구독 리포트</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, "Malgun Gothic", sans-serif;
+      margin: 24px;
+      color: #111827;
+      background: #fff;
+    }
+    .wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    h1, h2 { margin-top: 0; }
+    .meta {
+      color: #6b7280;
+      margin-bottom: 18px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat {
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 14px;
+      background: #f8fafc;
+    }
+    .label {
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 700;
+    }
+    .value {
+      font-size: 22px;
+      font-weight: 800;
+      margin-top: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      margin-bottom: 24px;
+    }
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 10px;
+      text-align: left;
+      vertical-align: middle;
+    }
+    th { background: #f8fafc; }
+    .right { text-align: right; }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: #2563eb;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      border: 0;
+      cursor: pointer;
+    }
+    .muted { color: #6b7280; }
+    @media print {
+      .no-print { display: none !important; }
+      body { margin: 0; }
+      .wrap { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar no-print">
+      <div>
+        <h1>구독 리포트</h1>
+        <div class="meta">생성 시각: {{ now }}</div>
+      </div>
+      <div>
+        <button class="btn" onclick="window.print()">인쇄 / PDF 저장</button>
+        <a class="btn" href="/subscribe">돌아가기</a>
+      </div>
+    </div>
+
+    <h1 style="margin-bottom: 4px;">구독 리포트</h1>
+    <div class="meta">생성 시각: {{ now }}</div>
+
+    <div class="grid">
+      <div class="stat">
+        <div class="label">월간 합계</div>
+        <div class="value">{{ "{:,}".format(total_monthly) }}원</div>
+      </div>
+      <div class="stat">
+        <div class="label">연간 합계</div>
+        <div class="value">{{ "{:,}".format(total_yearly) }}원</div>
+      </div>
+      <div class="stat">
+        <div class="label">연 환산 합계</div>
+        <div class="value">{{ "{:,}".format(total_annual) }}원</div>
+      </div>
+      <div class="stat">
+        <div class="label">월 예산 대비</div>
+        <div class="value">{{ "{:,}".format(stats.monthly_total) }} / {{ "{:,}".format(stats.monthly_budget) }}</div>
+      </div>
+    </div>
+
+    <h2>월간 구독</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>서비스명</th>
+          <th>카테고리</th>
+          <th class="right">가격(원)</th>
+          <th>만기일</th>
+          <th>D-day</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in monthly_list %}
+        <tr>
+          <td>{{ s.name }}</td>
+          <td>{{ s.category }}</td>
+          <td class="right">{{ "{:,}".format(s.price) }}</td>
+          <td>{{ s.expiry if s.expiry else "-" }}</td>
+          <td>
+            {% if s.due_days is not none %}
+              {% if s.due_days < 0 %}
+                D+{{ -s.due_days }}
+              {% elif s.due_days == 0 %}
+                D-0(오늘)
+              {% else %}
+                D-{{ s.due_days }}
+              {% endif %}
+            {% else %}
+              -
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="muted">월간 구독이 없습니다.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>연간 구독</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>서비스명</th>
+          <th>카테고리</th>
+          <th class="right">가격(원)</th>
+          <th>만기일</th>
+          <th>D-day</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in yearly_list %}
+        <tr>
+          <td>{{ s.name }}</td>
+          <td>{{ s.category }}</td>
+          <td class="right">{{ "{:,}".format(s.price) }}</td>
+          <td>{{ s.expiry if s.expiry else "-" }}</td>
+          <td>
+            {% if s.due_days is not none %}
+              {% if s.due_days < 0 %}
+                D+{{ -s.due_days }}
+              {% elif s.due_days == 0 %}
+                D-0(오늘)
+              {% else %}
+                D-{{ s.due_days }}
+              {% endif %}
+            {% else %}
+              -
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="muted">연간 구독이 없습니다.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

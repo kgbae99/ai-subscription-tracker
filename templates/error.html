@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>오류 발생</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, "Malgun Gothic", sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: linear-gradient(180deg, #eef4ff 0%, #f4f7fb 220px);
+      color: #111827;
+    }
+    .wrap {
+      max-width: 720px;
+      margin: 40px auto;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    }
+    h1 { margin-top: 0; }
+    p { color: #4b5563; }
+    a {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: #2563eb;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>오류가 발생했습니다</h1>
+      <p>{{ error_message }}</p>
+      <a href="/subscribe">메인으로 돌아가기</a>
+    </div>
+  </div>
+</body>
+</html>

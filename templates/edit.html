@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>구독 수정</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, "Malgun Gothic", sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: linear-gradient(180deg, #eef4ff 0%, #f4f7fb 220px);
+      color: #111827;
+    }
+    .wrap {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .card {
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      padding: 22px;
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    }
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: end;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+      font-weight: 700;
+      color: #374151;
+    }
+    input, select {
+      padding: 11px 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      min-width: 180px;
+      font-size: 14px;
+      background: #fff;
+      color: #111827;
+    }
+    button, a.btn {
+      padding: 11px 14px;
+      border: 0;
+      border-radius: 12px;
+      background: #2563eb;
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 14px;
+      display: inline-block;
+      font-weight: 700;
+    }
+    .btn-secondary {
+      background: #64748b;
+    }
+    .muted {
+      color: #6b7280;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>구독 수정</h1>
+
+      <form method="post">
+        <div class="row">
+          <div>
+            <label>구독 종류</label>
+            <select name="type">
+              <option value="monthly" {% if sub.type == 'monthly' %}selected{% endif %}>월간</option>
+              <option value="yearly" {% if sub.type == 'yearly' %}selected{% endif %}>연간</option>
+            </select>
+          </div>
+
+          <div>
+            <label>카테고리</label>
+            <select name="category">
+              {% for c in category_options %}
+                <option value="{{ c }}" {% if sub.category == c %}selected{% endif %}>{{ c }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div>
+            <label>서비스명</label>
+            <input name="name" value="{{ sub.name }}" maxlength="100" />
+          </div>
+
+          <div>
+            <label>가격</label>
+            <input name="price" value="{{ sub.original_price }}" />
+          </div>
+
+          <div>
+            <label>통화</label>
+            <select name="currency">
+              <option value="KRW" {% if sub.currency == 'KRW' %}selected{% endif %}>KRW(원)</option>
+              <option value="USD" {% if sub.currency == 'USD' %}selected{% endif %}>USD(달러)</option>
+            </select>
+          </div>
+
+          <div>
+            <label>만기 날짜</label>
+            <input type="date" name="expiry" value="{{ sub.expiry }}" />
+            <div class="muted">선택 사항</div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;">
+          <button type="submit">저장</button>
+          <a class="btn btn-secondary" href="/subscribe">취소</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
